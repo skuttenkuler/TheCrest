@@ -24,6 +24,8 @@ ASCharacter::ASCharacter()
     
     //set permission to crouch
     GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+    
+    //CanEverCrouch() const { return NavAgentProps.bCanCrouch;
    
     
     
@@ -50,6 +52,7 @@ void ASCharacter::MoveRight(float Value)
 void ASCharacter::BeginCrouch()
 {
     Crouch();
+    UE_LOG(LogTemp,Warning, TEXT("Crouch pressed"));
 }
 void ASCharacter::EndCrouch()
 {
