@@ -3,14 +3,26 @@
 
 #include "SCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+
+
 // Sets default values
 ASCharacter::ASCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+    //spring arm
+    SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+    //set spring arm rotation to that of pawn character and attach to root
+    SpringArm->bUsePawnControlRotation = true;
+    SpringArm->SetupAttachment(RootComponent);
     //camera on character
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-    Camera->bUsePawnControlRotation = true;
+    //attach camera to spirng arm
+    Camera->SetupAttachment(SpringArm);
+   
+    
+    
 }
 
 // Called when the game starts or when spawned

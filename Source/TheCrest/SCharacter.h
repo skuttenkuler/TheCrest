@@ -8,6 +8,7 @@
 
 
 class UCameraComponent;
+class USpringArmComponent;
 
 UCLASS()
 class THECREST_API ASCharacter : public ACharacter
@@ -26,6 +27,8 @@ protected:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     UCameraComponent* Camera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+    USpringArmComponent* SpringArm;
 
 public:	
 	// Called every frame
