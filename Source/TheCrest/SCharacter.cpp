@@ -52,7 +52,7 @@ void ASCharacter::MoveRight(float Value)
 void ASCharacter::BeginCrouch()
 {
     Crouch();
-    UE_LOG(LogTemp,Warning, TEXT("Crouch pressed"));
+    //UE_LOG(LogTemp,Warning, TEXT("Crouch pressed"));
 }
 void ASCharacter::EndCrouch()
 {
@@ -80,6 +80,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     //player crouch
     PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ASCharacter::BeginCrouch);
     PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ASCharacter::EndCrouch);
+    //player jump
+    PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+    
     
 }
 

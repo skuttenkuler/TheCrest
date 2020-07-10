@@ -29,6 +29,8 @@ protected:
     void EndCrouch();
     
     
+    
+    
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     UCameraComponent* Camera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
