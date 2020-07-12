@@ -5,6 +5,8 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 
 // Sets default values
@@ -17,7 +19,9 @@ ASWeapon::ASWeapon()
     RootComponent = MeshComponent;
     
     //muzzle socket component
-    MuzzleSocketName = "MuzzleSocket";  
+    MuzzleSocketName = "MuzzleSocket";
+    //tracer target
+    TracerTargetName = "Target";
 
 }
 
@@ -42,6 +46,8 @@ void ASWeapon::PullTrigger()
         Params.AddIgnoredActor(this);
         //trace every triangle in mesh
         Params.bTraceComplex = true;
+        //particle target param
+        FVector TracerEndPoint = TraceEnd;
         //trace line with start point and endpoint
         FHitResult Hit;
         //if tuthy hit then do
@@ -57,6 +63,8 @@ void ASWeapon::PullTrigger()
             {
                 UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
             }
+            //if we don't hit a break point or character, use endpoint of tracer
+            TracerEndPoint = Hit.ImpactPoint;
         }
            
         DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
@@ -65,6 +73,19 @@ void ASWeapon::PullTrigger()
         {
             UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComponent, MuzzleSocketName);
         }
+        
+       
+        if(TracerEffect)
+        {
+            //get location for muzzle
+            FVector MuzzleLocation = MeshComponent->GetSocketLocation(MuzzleSocketName);
+            UParticleSystemComponent* TracerComponent = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
+            if(TracerComponent)
+            {
+                TracerComponent->SetVectorParameter(TracerTargetName, TracerEndPoint);
+            }
+        }
+        
         
     }
 }

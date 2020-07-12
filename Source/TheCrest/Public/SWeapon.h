@@ -31,15 +31,21 @@ protected:
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
     TSubclassOf<UDamageType> DamageType;
-    
+    //muzzle socket
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
     FName MuzzleSocketName;
-    
+    //tracer target
+    UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+    FName TracerTargetName;
+    //muzzle effect
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
     UParticleSystem* MuzzleEffect;
-    
+    //impact effect
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
     UParticleSystem* ImpactEffect;
+    //tracer effect
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+    UParticleSystem* TracerEffect;
     
     
 public:	
