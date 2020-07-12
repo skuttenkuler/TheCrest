@@ -7,6 +7,7 @@
 #include "SWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class DamageType;
 
 UCLASS()
 class THECREST_API ASWeapon : public AActor
@@ -25,8 +26,10 @@ protected:
     USkeletalMeshComponent* MeshComponent;
     
     UFUNCTION(BlueprintCallable,Category = "Weapon" )
-    
     void PullTrigger();
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+    TSubclassOf<UDamageType> DamageType;
 
 public:	
 	// Called every frame
