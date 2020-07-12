@@ -27,7 +27,7 @@ protected:
     USkeletalMeshComponent* MeshComponent;
     
     UFUNCTION(BlueprintCallable,Category = "Weapon" )
-    void PullTrigger();
+    virtual void PullTrigger();
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
     TSubclassOf<UDamageType> DamageType;
