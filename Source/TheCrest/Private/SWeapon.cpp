@@ -2,6 +2,7 @@
 
 
 #include "SWeapon.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -11,6 +12,39 @@ ASWeapon::ASWeapon()
     MeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComponent"));
     RootComponent = MeshComponent;
 
+}
+
+void ASWeapon::PullTrigger()
+{
+    AActor* Owner =  GetOwner();
+    //check for truthy pawn owner
+    if(Owner)
+    {
+        FVector EyeLocation;
+        FRotator EyeRotation;
+        Owner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+        
+        FVector TraceEnd = EyeLocation + (EyeRotation.Vector() * 10000);
+        
+        
+        
+        //set params I want line trace to ignore, pawna and gun
+        FCollisionQueryParams Params;
+        Params.AddIgnoredActor(Owner);
+        Params.AddIgnoredActor(this);
+        //trace every triangle in mesh
+        Params.bTraceComplex = true;
+        //trace line with start point and endpoint
+        FHitResult Hit;
+        //if tuthy hit then do
+        if(GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility))
+        {
+           //hit. do damage
+        }
+           
+           DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+    
+    }
 }
 
 // Called when the game starts or when spawned
