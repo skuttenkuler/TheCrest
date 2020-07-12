@@ -4,13 +4,20 @@
 #include "SWeapon.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
+
+
 // Sets default values
 ASWeapon::ASWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+    
     MeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComponent"));
     RootComponent = MeshComponent;
+    
+    //muzzle socket component
+    MuzzleSocketName = "MuzzleSocket";  
 
 }
 
@@ -45,10 +52,20 @@ void ASWeapon::PullTrigger()
             AActor* HitActor = Hit.GetActor();
             
             UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, Owner->GetInstigatorController(), this, DamageType);
+            //if impact effect is assigned
+            if(ImpactEffect)
+            {
+                UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+            }
         }
            
-           DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
-    
+        DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+        //check if muzzle effect is assigned
+        if(MuzzleEffect)
+        {
+            UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComponent, MuzzleSocketName);
+        }
+        
     }
 }
 
