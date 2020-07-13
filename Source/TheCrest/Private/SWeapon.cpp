@@ -67,7 +67,7 @@ void ASWeapon::PullTrigger()
             TracerEndPoint = Hit.ImpactPoint;
         }
            
-        DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+//        DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
         //check if muzzle effect is assigned
         if(MuzzleEffect)
         {

@@ -26,8 +26,8 @@ ASCharacter::ASCharacter()
     GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
     
     //CanEverCrouch() const { return NavAgentProps.bCanCrouch;
-   
-    
+    //level of zoom
+    ZoomedFOV = 65.0f;
     
 }
 
@@ -35,6 +35,8 @@ ASCharacter::ASCharacter()
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+    //get default view
+    DefaultFOV = Camera->FieldOfView;
 	
 }
 
@@ -59,10 +61,21 @@ void ASCharacter::EndCrouch()
     UnCrouch();
 }
 
+void ASCharacter::BeginZoom()
+{
+    bWantsToZoom = true;
+}
+void ASCharacter::EndZoom()
+{
+     bWantsToZoom = false;
+}
+
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    float CurrentFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
+    Camera->SetFieldOfView(CurrentFOV);
 
 }
 
@@ -82,6 +95,9 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ASCharacter::EndCrouch);
     //player jump
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+    //player FOV ZOOM
+    PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &ASCharacter::BeginZoom);
+    PlayerInputComponent->BindAction("Zoom", IE_Released, this, &ASCharacter::EndZoom);
     
     
 }
