@@ -3,7 +3,7 @@
 
 #include "SProjectileWeapon.h"
 
-void ASProjectileWeapon::PullTrigger()
+void ASProjectileWeapon::Fire()
 {
     AActor* Owner =  GetOwner();
     //check for truthy pawn owner

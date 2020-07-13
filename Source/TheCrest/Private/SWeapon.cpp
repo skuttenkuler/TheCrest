@@ -18,8 +18,6 @@ FAutoConsoleVariableRef CVARDebugWeaponDrawing(
 // Sets default values
 ASWeapon::ASWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
     
     MeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComponent"));
     RootComponent = MeshComponent;
@@ -31,7 +29,7 @@ ASWeapon::ASWeapon()
 
 }
 
-void ASWeapon::PullTrigger()
+void ASWeapon::Fire()
 {
     AActor* Owner =  GetOwner();
     //check for truthy pawn owner
@@ -77,40 +75,27 @@ void ASWeapon::PullTrigger()
         {
             DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
         }
-        
-        //check if muzzle effect is assigned
-        if(MuzzleEffect)
-        {
-            UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComponent, MuzzleSocketName);
-        }
-        
-       
-        if(TracerEffect)
-        {
-            //get location for muzzle
-            FVector MuzzleLocation = MeshComponent->GetSocketLocation(MuzzleSocketName);
-            UParticleSystemComponent* TracerComponent = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
-            if(TracerComponent)
-            {
-                TracerComponent->SetVectorParameter(TracerTargetName, TracerEndPoint);
-            }
-        }
-        
+        PlayFireEffects(TracerEndPoint);
         
     }
 }
-
-// Called when the game starts or when spawned
-void ASWeapon::BeginPlay()
+void ASWeapon::PlayFireEffects(FVector TraceEnd)
 {
-	Super::BeginPlay();
-	
+    //check if muzzle effect is assigned
+     if(MuzzleEffect)
+     {
+         UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComponent, MuzzleSocketName);
+     }
+    
+     if(TracerEffect)
+     {
+         //get location for muzzle
+         FVector MuzzleLocation = MeshComponent->GetSocketLocation(MuzzleSocketName);
+         UParticleSystemComponent* TracerComponent = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
+         if(TracerComponent)
+         {
+             TracerComponent->SetVectorParameter(TracerTargetName, TraceEnd);
+         }
+     }
 }
-
-// Called every frame
-void ASWeapon::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
+    

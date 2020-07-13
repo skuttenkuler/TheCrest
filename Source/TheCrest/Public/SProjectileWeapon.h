@@ -16,7 +16,7 @@ class THECREST_API ASProjectileWeapon : public ASWeapon
     
 protected:
 
-    virtual void PullTrigger() override;
+    virtual void Fire();
     
     UPROPERTY(EditDefaultsOnly, Category = "ProjectileWeapon")
     TSubclassOf<AActor> ProjectileClass;
