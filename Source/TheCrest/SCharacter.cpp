@@ -28,7 +28,7 @@ ASCharacter::ASCharacter()
     //CanEverCrouch() const { return NavAgentProps.bCanCrouch;
     //level of zoom
     ZoomedFOV = 65.0f;
-    
+    ZoompInterpSpeed = 20;
 }
 
 // Called when the game starts or when spawned
@@ -74,8 +74,11 @@ void ASCharacter::EndZoom()
 void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-    float CurrentFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
-    Camera->SetFieldOfView(CurrentFOV);
+    float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
+    //zoom time
+    float NewFOV = FMath::FInterpTo(Camera->FieldOfView, TargetFOV, DeltaTime, ZoompInterpSpeed);
+    
+    Camera->SetFieldOfView(NewFOV);
 
 }
 

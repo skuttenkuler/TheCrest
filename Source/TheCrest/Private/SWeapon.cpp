@@ -8,6 +8,12 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
+static int32 DebugWeaponDrawing = 0;
+FAutoConsoleVariableRef CVARDebugWeaponDrawing(
+                TEXT("COOP.DebugWeapons"),
+                DebugWeaponDrawing,
+                TEXT("Draw Debug Lines for Weapons"),
+                ECVF_Cheat);
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -67,7 +73,11 @@ void ASWeapon::PullTrigger()
             TracerEndPoint = Hit.ImpactPoint;
         }
            
-//        DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+        if(DebugWeaponDrawing > 0)
+        {
+            DrawDebugLine(GetWorld(),EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+        }
+        
         //check if muzzle effect is assigned
         if(MuzzleEffect)
         {

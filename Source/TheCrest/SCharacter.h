@@ -43,6 +43,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Player")
     float ZoomedFOV;
     
+    UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin=0.1, ClampMax=100))
+    float ZoompInterpSpeed;
+    
     //default view
     float DefaultFOV;
     
