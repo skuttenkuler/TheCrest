@@ -58,7 +58,7 @@ void ASWeapon::Fire()
         //trace line with start point and endpoint
         FHitResult Hit;
         //if tuthy hit then do
-        if(GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility))
+        if(GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, Params))
         {
            //hit. do damage
             //get actor
