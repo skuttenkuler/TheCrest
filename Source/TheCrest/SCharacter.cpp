@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "../TheCrest.h"
 #include "SWeapon.h"
+#include "Public/Components/SHealthComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -30,6 +31,8 @@ ASCharacter::ASCharacter()
     //make sure mesh is blocking weapon trace, not the capsule component
     GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
     //CanEverCrouch() const { return NavAgentProps.bCanCrouch;
+    HealthComponent = CreateDefaultSubobject<USHealthComponent>(TEXT("Health"));
+    
     //level of zoom
     ZoomedFOV = 65.0f;
     ZoompInterpSpeed = 20;
@@ -53,6 +56,8 @@ void ASCharacter::BeginPlay()
         CurrentWeapon->SetOwner(this);
         CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,WeaponAttachSocketName);
     }
+    
+    HealthComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -99,6 +104,26 @@ void ASCharacter::StopFire()
     {
         CurrentWeapon->StopFire();
     }
+}
+
+void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType,
+   class AController* InstigatedBy, AActor* DamageCauser)
+{
+   if (Health <= 0.0f && !bDied)
+   {
+       // Die!
+       bDied = true;
+       //stop all movement
+       GetMovementComponent()->StopMovementImmediately();
+       //stop an collision with capsule
+       GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+       DetachFromControllerPendingDestroy();
+       
+       SetLifeSpan(10.0f);
+
+      
+   }
 }
 
 // Called every frame

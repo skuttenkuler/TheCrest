@@ -10,6 +10,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class ASWeapon;
+class USHealthComponent;
 
 UCLASS()
 class THECREST_API ASCharacter : public ACharacter
@@ -37,6 +38,9 @@ protected:
     UCameraComponent* Camera;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     USpringArmComponent* SpringArm;
+    
+    //health comp
+    USHealthComponent* HealthComponent;
 
     //zoom
     bool bWantsToZoom;
@@ -59,6 +63,12 @@ protected:
     TSubclassOf<ASWeapon> StarterWeaponClass;
     UPROPERTY(VisibleDefaultsOnly, Category = "Player")
     FName WeaponAttachSocketName;
+    
+    UFUNCTION()
+    void OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+    
+    UPROPERTY(BlueprintReadOnly, Category = "Player")
+    bool bDied;
    
 public:	
 	// Called every frame
