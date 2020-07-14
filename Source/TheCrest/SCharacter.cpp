@@ -5,8 +5,10 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "../TheCrest.h"
 #include "SWeapon.h"
-
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -25,7 +27,8 @@ ASCharacter::ASCharacter()
     
     //set permission to crouch
     GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
-    
+    //make sure mesh is blocking weapon trace, not the capsule component
+    GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
     //CanEverCrouch() const { return NavAgentProps.bCanCrouch;
     //level of zoom
     ZoomedFOV = 65.0f;
