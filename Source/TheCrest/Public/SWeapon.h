@@ -49,6 +49,9 @@ protected:
     
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TSubclassOf<UCameraShake> FireCameraShake;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+    float BaseDamage;
 public:	
     UFUNCTION(BlueprintCallable, Category = "Weapon" )
     void Fire();
