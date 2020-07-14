@@ -39,7 +39,10 @@ protected:
     UParticleSystem* MuzzleEffect;
     //impact effect
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-    UParticleSystem* ImpactEffect;
+    UParticleSystem* DefaultImpactEffect;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+    UParticleSystem* FleshImpactEffect;
     //tracer effect
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
     UParticleSystem* TracerEffect;

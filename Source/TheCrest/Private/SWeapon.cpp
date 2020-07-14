@@ -7,6 +7,8 @@
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
+#include "../TheCrest.h"
 
 static int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVARDebugWeaponDrawing(
@@ -50,6 +52,7 @@ void ASWeapon::Fire()
         Params.AddIgnoredActor(this);
         //trace every triangle in mesh
         Params.bTraceComplex = true;
+        Params.bReturnPhysicalMaterial = true;
         //particle target param
         FVector TracerEndPoint = TraceEnd;
         //trace line with start point and endpoint
@@ -62,11 +65,26 @@ void ASWeapon::Fire()
             AActor* HitActor = Hit.GetActor();
             
             UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, Owner->GetInstigatorController(), this, DamageType);
-            //if impact effect is assigned
-            if(ImpactEffect)
+            //get type
+            EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+            UParticleSystem* SelectedEffect = nullptr;
+            //switch case for different hit impacts
+            switch (SurfaceType)
             {
-                UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+                case SURFACE_FLESHDEFAULT:
+                case SURFACE_FLESHVULNERABLE:
+                    SelectedEffect = FleshImpactEffect;
+                    break;
+                default:
+                    SelectedEffect = DefaultImpactEffect;
+                    break;
             }
+            //if impact effect is assigned
+            if(SelectedEffect)
+            {
+                UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DefaultImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+            }
+
             //if we don't hit a break point or character, use endpoint of tracer
             TracerEndPoint = Hit.ImpactPoint;
         }
@@ -100,14 +118,14 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
     
     //camera shake
     //point to controller
-    APawn* MyOwner = Cast<APawn>(GetOwner());
-    if(MyOwner)
+   APawn* MyOwner = Cast<APawn>(GetOwner());
+    if (MyOwner)
     {
         APlayerController* PC = Cast<APlayerController>(MyOwner->GetController());
-        if(PC)
+        if (PC)
         {
-            PC->ClientPlayCameraShake(FireCameraShake);        }
+            PC->ClientPlayCameraShake(FireCameraShake);
+        }
     }
-        
 }
     
