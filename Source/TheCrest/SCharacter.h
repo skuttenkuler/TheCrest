@@ -40,6 +40,7 @@ protected:
     USpringArmComponent* SpringArm;
     
     //health comp
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     USHealthComponent* HealthComponent;
 
     //zoom
