@@ -44,7 +44,8 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
     UParticleSystem* TracerEffect;
     
-    
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+    TSubclassOf<UCameraShake> FireCameraShake;
 public:	
     UFUNCTION(BlueprintCallable, Category = "Weapon" )
     void Fire();
