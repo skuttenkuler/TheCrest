@@ -9,6 +9,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "../TheCrest.h"
+#include "TimerManager.h"
 
 static int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVARDebugWeaponDrawing(
@@ -16,6 +17,14 @@ FAutoConsoleVariableRef CVARDebugWeaponDrawing(
                 DebugWeaponDrawing,
                 TEXT("Draw Debug Lines for Weapons"),
                 ECVF_Cheat);
+
+void ASWeapon::BeginPlay()
+{
+    Super::BeginPlay();
+    TimeBetweenShots = 60 / RateOfFire;
+}
+
+
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -30,6 +39,8 @@ ASWeapon::ASWeapon()
     TracerTargetName = "Target";
     //damage
     BaseDamage = 20.0f;
+    //rate of fire
+    RateOfFire = 600;
 
 }
 
@@ -103,8 +114,22 @@ void ASWeapon::Fire()
         }
         PlayFireEffects(TracerEndPoint);
         
+        LastFireTime = GetWorld()->TimeSeconds;
+        
     }
 }
+
+void ASWeapon::StartFire()
+{
+    float FirstDelay = FMath::Max(LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds, 0.0f);
+    GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true, FirstDelay);
+}
+
+void ASWeapon::StopFire()
+{
+    GetWorldTimerManager().ClearTimer(TimerHandle_TimeBetweenShots);
+}
+
 void ASWeapon::PlayFireEffects(FVector TraceEnd)
 {
     //check if muzzle effect is assigned

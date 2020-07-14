@@ -59,7 +59,7 @@ protected:
     TSubclassOf<ASWeapon> StarterWeaponClass;
     UPROPERTY(VisibleDefaultsOnly, Category = "Player")
     FName WeaponAttachSocketName;
-    void Fire();
+   
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -67,4 +67,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
     virtual FVector GetPawnViewLocation() const override;
+    
+    UFUNCTION(BlueprintCallable, Category = "Player")
+    void StartFire();
+    UFUNCTION(BlueprintCallable, Category = "Player")
+    void StopFire();
 };
